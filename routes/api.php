@@ -86,4 +86,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 ->name('admin.transactions.mark-returned');
         });
     });
+
+    // Profile routes
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::post('/profile/update', [UserController::class, 'updateProfile']);
+    Route::post('/profile/update-password', [UserController::class, 'updatePassword']);
 });

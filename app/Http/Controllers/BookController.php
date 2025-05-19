@@ -60,7 +60,7 @@ class BookController extends Controller
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', '%'.$request->search.'%')
                   ->orWhere('author', 'like', '%'.$request->search.'%')
-                  ->orWhere('isbn', 'like', '%'.$request->search.'%')
+                  
                   ->orWhere('genre', 'like', '%'.$request->search.'%');
             });
         }
@@ -101,7 +101,6 @@ class BookController extends Controller
             $book = Book::create([
                 'title' => $validated['title'],
                 'author' => $validated['author'],
-                'isbn' => $validated['isbn'],
                 'genre' => $validated['genre'],
                 'description' => $validated['description'] ?? null,
                 'total_copies' => $validated['total_copies'],

@@ -13,19 +13,13 @@ class UpdateBookRequest extends FormRequest
     }
 
     public function rules()
-{
-    return [
-        'title' => 'required|string|max:255',
-        'author' => 'required|string|max:255',
-        'isbn' => [
-            'required',
-            'string',
-            'max:255',
-            Rule::unique('books')->ignore($this->book->id),
-        ],
-        'genre' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'total_copies' => 'required|integer|min:1',
-    ];
-}
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'total_copies' => 'required|integer|min:1',
+        ];
+    }
 }

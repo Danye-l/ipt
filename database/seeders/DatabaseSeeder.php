@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'To Kill a Mockingbird',
                 'author' => 'Harper Lee',
-                'isbn' => '9780061120084',
                 'genre' => 'Fiction',
                 'description' => 'A novel about the serious issues of rape and racial inequality.',
                 'total_copies' => 5,
@@ -39,7 +38,6 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => '1984',
                 'author' => 'George Orwell',
-                'isbn' => '9780451524935',
                 'genre' => 'Dystopian',
                 'description' => 'A dystopian social science fiction novel and cautionary tale.',
                 'total_copies' => 3,
@@ -48,7 +46,6 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'The Great Gatsby',
                 'author' => 'F. Scott Fitzgerald',
-                'isbn' => '9780743273565',
                 'genre' => 'Classic',
                 'description' => 'A story of the fabulously wealthy Jay Gatsby and his love for Daisy Buchanan.',
                 'total_copies' => 4,
@@ -58,7 +55,6 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
-                'isbn' => '9781503290563',
                 'genre' => 'Classic',
                 'description' => 'Romantic novel of manners.',
                 'total_copies' => 6,
@@ -67,7 +63,6 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'The Hobbit',
                 'author' => 'J.R.R. Tolkien',
-                'isbn' => '9780547928227',
                 'genre' => 'Fantasy',
                 'description' => 'Fantasy novel about the adventures of Bilbo Baggins.',
                 'total_copies' => 4,

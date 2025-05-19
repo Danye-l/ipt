@@ -18,7 +18,6 @@ class Book extends Model
     protected $fillable = [
         'title',
         'author',
-        'isbn',
         'genre',
         'description',
         'total_copies', 
@@ -72,7 +71,6 @@ class Book extends Model
     return $query->where(function($q) use ($search) {
         $q->where('title', 'like', "%{$search}%")
           ->orWhere('author', 'like', "%{$search}%")
-          ->orWhere('isbn', 'like', "%{$search}%")
           ->orWhere('genre', 'like', "%{$search}%");
     });
 }

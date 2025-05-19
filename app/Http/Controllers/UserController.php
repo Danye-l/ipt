@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -75,44 +76,70 @@ class UserController extends Controller
     }
 
     /**
-     * Update the profile of a user.
+     * Update the profile information of a user (name, email, profile image).
      */
-    public function update(Request $request, User $user)
+    public function updateProfile(Request $request)
     {
+        $user = $request->user();
+        
+        // Build validation rules for profile update
+        $rules = [];
+        
+        if ($request->has('name')) {
+            $rules['name'] = 'required|string|max:255';
+        }
+        
+        if ($request->has('email')) {
+            $rules['email'] = 'required|string|email|max:255|unique:users,email,' . $user->id;
+        }
+        
+        if ($request->hasFile('profile_image')) {
+            $rules['profile_image'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+
         // Validate input fields
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
-        ]);
+        $validated = $request->validate($rules);
+
+        // Handle profile image upload
+        if ($request->hasFile('profile_image')) {
+            // Delete old profile image if exists
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+
+            // Store new profile image
+            $path = $request->file('profile_image')->store('profile-images', 'public');
+            $validated['profile_image'] = $path;
+        }
 
         // Update user details
         $user->update($validated);
 
+        // Refresh the user model to get updated data
+        $user->refresh();
+
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'data' => $user
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'profile_image' => $user->profile_image
+            ]
         ]);
     }
 
     /**
-     * Delete a user.
+     * Update the password of a user.
      */
-    public function destroy(User $user)
-    {
-        // Perform any necessary checks before deleting, like ensuring no active transactions
-        $user->delete();
-        return response()->json(['message' => 'User deleted successfully']);
-    }
-
-    /**
-     * Change the user's password.
-     */
-    public function changePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:8|confirmed',
+            'new_password_confirmation' => 'required|string'
         ]);
 
         $user = $request->user();
@@ -131,8 +158,18 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Password changed successfully'
+            'message' => 'Password updated successfully'
         ]);
+    }
+
+    /**
+     * Delete a user.
+     */
+    public function destroy(User $user)
+    {
+        // Perform any necessary checks before deleting, like ensuring no active transactions
+        $user->delete();
+        return response()->json(['message' => 'User deleted successfully']);
     }
 
     /**
@@ -159,7 +196,9 @@ class UserController extends Controller
                         'borrowed_at' => optional($transaction->borrowed_at)->toDateTimeString(),
                         'due_date' => optional($transaction->due_date)->toDateTimeString(),
                         'available_copies' => $transaction->book->available_copies,
-                        'total_copies' => $transaction->book->total_copies
+                        'total_copies' => $transaction->book->total_copies,
+                        'transaction_id' => $transaction->id,
+                        'status' => $transaction->status
                     ];
                 })->values();
 

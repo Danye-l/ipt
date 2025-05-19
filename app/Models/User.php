@@ -20,7 +20,8 @@ class User extends Authenticatable implements CanResetPassword
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'profile_image'
     ];
 
     protected $hidden = [
